@@ -44,6 +44,8 @@ local Window = Rayfield:CreateWindow({
 
 local FarmTab = Window:CreateTab("Farm")
 
+Rayfield:SetVisibility(true)
+
 local plr = game.Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 local money = plr.PlayerGui.MainHUDGui.TopRight.Money.TextLabel
