@@ -44,7 +44,16 @@ local Window = Rayfield:CreateWindow({
 
 local FarmTab = Window:CreateTab("Farm")
 
-local Section = FarmTab:CreateSection("Abaidna")
+local CivillianSection = FarmTab:CreateSection("Civillian")
+
+local CivillianFarmToogler = FarmTab:CreateToggle({
+	Name = "Farm",
+    CurrentValue = false,
+    Flag = "CivillianFarm", -- A flag is the identifier for the configuration file; make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+    	print(Value)
+    end,
+})
 
 Rayfield:SetVisibility(true)
 
