@@ -40,13 +40,22 @@ local FarmSettings = {
          SellPlace = Vector3.new(-82.2566909790039, 49.247047424316406, 433.8547668457031),
          EntryLaundry = Vector3.new(6835.8427734375, 17.416330337524414, -42.792808532714844),
          LaundryProx = Vector3.new(6807.75146484375, 17.442039489746094, -34.21133041381836),
+         StartOfHeightElCapo = Vector3.new(6604.92919921875, 17.2186279296875, 79.9230728149414),
+         GatesElCapo = Vector3.new(6599.42578125, 61.04671096801758, -290.6493835449219),
+         RightFountainElCapo = Vector3.new(6630.91455078125, 61.04671096801758, -341.9266662597656),
+         EntryMansionElCapo = Vector3.new(6599.29150390625, 64.42216491699219, -412.14984130859375),
+         CenterElCapo = Vector3.new(6598.87841796875, 64.49603271484375, -432.0315246582031),
+         ElDiabloBoxPos = Vector3.new(6642.54638671875, 64.49603271484375, -433.93896484375),
          ["Crate Of Avacados"] = Vector3.new(6820.89990234375, 17.416330337524414, 33.121734619140625),
          ["Wagyu Beef"] = Vector3.new(6811.15380859375, 17.416330337524414, 34.29124450683594),
          ["Witches Brew"] = Vector3.new(6806.587890625, 17.416330337524414, 32.81328201293945),
          ["Fake Designer Sneakers"] = Vector3.new(6809.890625, 17.416330337524414, 20.172517776489258),
          ["Fake Diamond Ring"] = Vector3.new(6820.6767578125, 17.416330337524414, 20.180002212524414),
          ["Mona Lisa Painting"] = Vector3.new(6807.3896484375, 17.416332244873047, 22.95276641845703),
-         ["El Diablo Box"] = {Spawn} -- Path To El Diablo
+         ["El Diablo Box"] = {
+            PathToBuy = {Spawn, StartOfRoad, StartOfHeightElCapo, GatesElCapo, RightFountainElCapo, EntryMansionElCapo, CenterElCapo, ElDiabloBoxPos},
+            PathToBack = {CenterElCapo, EntryMansionElCapo, RightFountainElCapo, GatesElCapo, StartOfHeightElCapo, StartOfRoad}
+         }
       },
       Prices = {
          ["Crate Of Avacados"] = 150,
@@ -193,7 +202,13 @@ function EnableTheCivilianFarm(Value)
 
             local currentSelectedItems = FarmSettings.Civilian.Items
 
-            GoToPosition(FarmSettings.Civilian.Positions[currentSelectedItems])
+            local position = FarmSettings.Civilian.Positions[currentSelectedItems]
+
+            if type(position) == "table" then
+               for _, pos in position.PathToBuy do
+                  GoToPosition(pos)
+               end
+            end
 
             local quanity = FarmSettings.Civilian.Quanity
             local price = FarmSettings.Civilian.Prices[currentSelectedItems]
@@ -216,9 +231,15 @@ function EnableTheCivilianFarm(Value)
             local ProximityPromptForItem = FarmSettings.Civilian.ProximityPrompts[currentSelectedItems]
 
             while true do
-               TriggerTheProximityPrompt(ProximityPromptForItem, FarmSettings.Civilian.Positions[currentSelectedItems])
+               TriggerTheProximityPrompt(ProximityPromptForItem, if type(position) == "table" then position.PathToBuy[#position.PathToBuy] else position)
                if CountTheQuanityOfItems(currentSelectedItems) == quanity then
                   break
+               end
+            end
+
+            if type(position) == "table" then
+               for _, pos in position.PathToBack do
+                  GoToPosition(pos)
                end
             end
 
