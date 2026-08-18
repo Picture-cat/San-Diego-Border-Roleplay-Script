@@ -136,14 +136,14 @@ function TriggerTheProximityPrompt(ProximityPrompt)
    camera.CameraType = Enum.CameraType.Scriptable
    camera.CFrame = CFrame.lookAt(camera.CFrame.Position, ProximityPrompt.Parent.Position)
 
-   task.wait(0.05)
+   task.wait(0.1)
       
    while not successTrigger do
       fireproximityprompt(ProximityPrompt)
-      task.wait(1)
+      task.wait()
    end
 
-   task.wait(0.05)
+   task.wait(0.1)
 
    camera.CameraType = Enum.CameraType.Custom
 
@@ -259,7 +259,7 @@ function EnableTheCivilianFarm(Value)
             GoToPosition(FarmSettings.Civilian.Positions.EntryLaundry)
             GoToPosition(FarmSettings.Civilian.Positions.LaundryProx)
 
-            local currentMoney = getMoneyValue()
+            local currentMoney = GetMoneyValue()
 
             if not FarmSettings.Civilian.ProximityPrompts.LaunderCash then
                local nearestProx
