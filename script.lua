@@ -32,7 +32,7 @@ local FarmSettings = {
          ["Witches Brew"] = Vector3.new(6806.587890625, 17.416330337524414, 32.81328201293945),
          ["Fake Designer Sneakers"] = Vector3.new(6809.890625, 17.416330337524414, 20.172517776489258),
          ["Fake Diamond Ring"] = Vector3.new(6820.6767578125, 17.416330337524414, 20.180002212524414),
-         ["Mona Liza Painting"] = Vector3.new(6807.3896484375, 17.416332244873047, 22.95276641845703),
+         ["Mona Lisa Painting"] = Vector3.new(6807.3896484375, 17.416332244873047, 22.95276641845703),
          ["El Diablo Box"] = {Spawn} -- Path To El Diablo
       },
       Prices = {
@@ -41,7 +41,7 @@ local FarmSettings = {
          ["Witches Brew"] = 500,
          ["Fake Designer Sneakers"] = 700,
          ["Fake Diamond Ring"] = 1000,
-         ["Mona Liza Painting"] = 3750,
+         ["Mona Lisa Painting"] = 3750,
          ["El Diablo Box"] = 5250
       },
       ProximityPrompts = {
@@ -50,7 +50,7 @@ local FarmSettings = {
          ["Witches Brew"] = workspace.WorldBuyableItems.CivilianArea["Witches Brew"].Handle.PromptAttachment.ProximityPrompt,
          ["Fake Designer Sneakers"] = workspace.WorldBuyableItems.CivilianArea["Fake Designer Sneakers"].Handle.PromptAttachment.ProximityPrompt,
          ["Fake Diamond Ring"] = workspace.WorldBuyableItems.CivilianArea["Fake Diamond Ring"].Handle.PromptAttachment.ProximityPrompt,
-         ["Mona Liza Painting"] = workspace.WorldBuyableItems.CivilianArea["Mona Liza Painting"].Handle.PromptAttachment.ProximityPrompt,
+         ["Mona Lisa Painting"] = workspace.WorldBuyableItems.CivilianArea["Mona Lisa Painting"].Handle.PromptAttachment.ProximityPrompt,
          ["El Diablo Box"] = workspace.WorldBuyableItems.ElCapo["El Diablo Box"].Mesh.PromptAttachment.ProximityPrompt
       }
    },
@@ -295,7 +295,7 @@ function initUI()
 
    FarmSettings.UI.QuanitySmuggledItemsSlider = QuanitySmuggledItemsSlider
 
-   local Items = {"Crate Of Avacados", "Wagyu Beef", "Witches Brew", "Fake Designer Sneakers", "Fake Diamond Ring", "Mona Liza Painting"}
+   local Items = {"Crate Of Avacados", "Wagyu Beef", "Witches Brew", "Fake Designer Sneakers", "Fake Diamond Ring", "Mona Lisa Painting"}
 
    if El_Capo then
       table.insert(Items, "El Diablo Box")
