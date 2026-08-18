@@ -79,6 +79,8 @@ function GoToPosition(targetVector3)
 
 	local traveledDistance = 0
 
+   local going = true
+
 	RunService:BindToRenderStep("GoingPosition", 1, function(dt)
 		traveledDistance = traveledDistance + (FarmSettings.Civilian.Speed * dt)
 		local alpha = math.clamp(traveledDistance / totalDistance, 0, 1)
@@ -89,9 +91,13 @@ function GoToPosition(targetVector3)
       local currentDistance = (targetVector3 - startCFrame.Position).Magnitude
 
 		if alpha >= 1 then
+         going = false
 			RunService:UnbindFromRenderStep("GoingPosition")
 		end
 	end)
+   while going do
+      task.wait()
+   end
 end
 
 function TriggerTheProximityPrompt(ProximityPrompt)
