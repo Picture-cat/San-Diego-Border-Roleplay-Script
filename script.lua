@@ -328,6 +328,8 @@ function initUI()
    Rayfield:SetVisibility(true)
 end
 
+initUI()
+
 -- -- Глобальные настройки
 -- _G.FarmActive = true
 -- local speed = 200 -- Стартовая скорость
