@@ -42,7 +42,7 @@ function GoToPosition(targetVector3)
 	local traveledDistance = 0
 
 	RunService:BindToRenderStep("GoingPosition", 1, function(dt)
-		traveledDistance = traveledDistance + (speed * dt)
+		traveledDistance = traveledDistance + (FarmSettings.Civilian.Speed * dt)
 		local alpha = math.clamp(traveledDistance / totalDistance, 0, 1)
 
 		rootPart.CFrame = startCFrame:Lerp(targetCFrame, alpha)
@@ -89,7 +89,7 @@ function EnableTheCivilianFarm(Value)
    if Value then
       ThreadFarm = task.spawn(function()
          while true do
-            
+
          end
       end)
    else
@@ -182,6 +182,15 @@ function initUI()
       Flag = "SmuggledItems",
       Callback = function(Options)
          FarmSettings.Civilian.Items = Options[1]
+      end,
+   })
+
+   local SavePositionButton = FarmTab:CreateButton({
+      Name = "Save Your Position",
+      Callback = function()
+         local position = rootPart.Position
+         local x, y, z = tostring(position.X), tostring(position.Y), tostring(position.Z)
+         setclipboard(x..", "..y..", "..z)
       end,
    })
 
