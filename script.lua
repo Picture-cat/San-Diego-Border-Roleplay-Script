@@ -1,86 +1,194 @@
 local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
+local MarketplaceService = game:GetService("MarketplaceService")
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local Window = Rayfield:CreateWindow({
-   Name = "San Diego Border Roleplay Script",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "San Diego Border Roleplay Script",
-   LoadingSubtitle = "by Picture_cat",
-   ShowText = "San Diego Border Roleplay Script", -- for mobile users to unhide Rayfield, change if you'd like
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local rootPart = character:WaitForChild("HumanoidRootPart")
 
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
-
-   DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from emitting warnings when the script has a version mismatch with the interface.
-
-   -- ScriptID = "sid_xxxxxxxxxxxx", -- Your Script ID from developer.sirius.menu — enables analytics, managed keys, and script hosting
-
-   ConfigurationSaving = {
-      Enabled = false,
-      FolderName = "San Diego Border Roleplay Script Picture_cat", -- Create a custom folder for your hub/game
-      FileName = "Big Hub"
-   },
-
-   Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include Discord.gg/. E.g. Discord.gg/ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the Discord every time they load it up
-   },
-
-   KeySystem = true, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "Untitled",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "San Diego Border Roleplay Script Picture_cat K", -- It is recommended to use something unique, as other scripts using Rayfield may overwrite your key file
-      SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Hello"} -- List of keys that the system will accept, can be RAW file links (pastebin, github, etc.) or simple strings ("hello", "key22")
+local FarmSettings = {
+   Civilian = {
+      Quanity = 1,
+      Items = "Avacados",
+      Speed = 200,
+      Positions = {
+         ["Avacados"] = Vector3.new(),
+         ["Wagyu Beef"] = Vector3.new(),
+         ["Witches Brew"] = Vector3.new(),
+         ["Fake Designer Sneakers"] = Vector3.new(),
+         ["Fake Diamond Ring"] = Vector3.new(),
+         ["Mona Liza"] = Vector3.new(),
+         ["El Diablo"] = {}
+      }
    }
-})
+}
 
-local FarmTab = Window:CreateTab("Farm")
+local El_Capo = MarketplaceService:UserOwnsGamePassAsync(player.UserId, 3581977887) -- Second argument is El Capo Gamepass ID
 
-local CivilianSection = FarmTab:CreateSection("Civilian")
+player.CharacterAdded:Connect(function(newChar)
+   character = newChar
+   rootPart = newChar:WaitForChild("HumanoidRootPart")
+end)
 
-local CivilianFarmToogler = FarmTab:CreateToggle({
-	Name = "Farm Enabled",
-    CurrentValue = false,
-    Flag = "CivilianFarm", -- A flag is the identifier for the configuration file; make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-    Callback = function(Value)
-    	print(Value)
-    end,
-})
+function GoToPosition(targetVector3)
+	local startCFrame = rootPart.CFrame
+	local targetCFrame = CFrame.new(targetVector3) * (startCFrame - startCFrame.Position)
+	local totalDistance = (targetVector3 - startCFrame.Position).Magnitude
 
-local QuanitySmuggledItemsSlider = FarmTab:CreateSlider({
-   Name = "Quanity Of Smuggled Items",
-   Range = {1, 5},
-   Increment = 1,
-   Suffix = "Smuggled Items",
-   CurrentValue = 1,
-   Flag = "QuanitySmuggledItems", -- A flag is the identifier for the configuration file; make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-   -- The function that takes place when the slider changes
-   -- The variable (Value) is a number that correlates to the value the slider is currently at
-   end,
-})
+	if totalDistance <= 0.5 then return true end
 
-local SmuggledItemsDropdown = FarmTab:CreateDropdown({
-   Name = "Sell",
-   Options = {"Avacados", "Wagyu Beef", "Witches Brew", "Fake Designer Sneakers", "Fake Diamond Ring", "Mona Liza"},
-   CurrentOption = {"Avacados"},
-   MultipleOptions = false,
-   Flag = "SmuggledItems", -- A flag is the identifier for the configuration file; make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Options)
-   -- The function that takes place when the selected option is changed
-   -- The variable (Options) is a table of strings for the current selected options
-   end,
-})
+	local traveledDistance = 0
 
-Rayfield:SetVisibility(true)
+	RunService:BindToRenderStep("GoingPosition", 1, function(dt)
+		traveledDistance = traveledDistance + (speed * dt)
+		local alpha = math.clamp(traveledDistance / totalDistance, 0, 1)
+
+		rootPart.CFrame = startCFrame:Lerp(targetCFrame, alpha)
+		rootPart.AssemblyLinearVelocity = Vector3.zero 
+
+      local currentDistance = (targetVector3 - startCFrame.Position).Magnitude
+
+		if alpha >= 1 then
+			RunService:UnbindFromRenderStep("GoingPosition")
+		end
+	end)
+end
+
+function TriggerTheProximityPrompt(ProximityPrompt)
+   local CurrentLineOfSight = ProximityPrompt.RequiresLineOfSight
+   local CurrentDistance = ProximityPrompt.MaxActivationDistance
+
+   ProximityPrompt.RequiresLineOfSight = false
+   ProximityPrompt.MaxActivationDistance = 10000
+
+   local successTrigger = false
+
+   local proximityPromptEventCheck
+   proximityPromptEventCheck = ProximityPrompt.Triggered:Connect(function(triggerPlayer)
+      if triggerPlayer == player then
+         successTrigger = true
+         proximityPromptEventCheck:Disconnect()
+         proximityPromptEventCheck = nil
+      end
+   end)
+      
+   while not successTrigger do
+      fireproximityprompt(ProximityPrompt)
+      task.wait(1)
+   end
+
+   ProximityPrompt.RequiresLineOfSight = CurrentLineOfSight
+   ProximityPrompt.MaxActivationDistance = CurrentLineOfSight
+end
+
+local ThreadFarm
+
+function EnableTheCivilianFarm(Value)
+   if Value then
+      ThreadFarm = task.spawn(function()
+         while true do
+
+         end
+      end)
+   else
+      ThreadFarm = nil
+   end
+end
+
+function initUI()
+   local Window = Rayfield:CreateWindow({
+      Name = "San Diego Border Roleplay Script",
+      Icon = "truck", -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+      LoadingTitle = "San Diego Border Roleplay Script",
+      LoadingSubtitle = "by Picture_cat",
+      ShowText = "San Diego Border Roleplay Script", -- for mobile users to unhide Rayfield, change if you'd like
+      Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+      ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+
+      DisableRayfieldPrompts = false,
+      DisableBuildWarnings = false, -- Prevents Rayfield from emitting warnings when the script has a version mismatch with the interface.
+
+      -- ScriptID = "sid_xxxxxxxxxxxx", -- Your Script ID from developer.sirius.menu — enables analytics, managed keys, and script hosting
+
+      ConfigurationSaving = {
+         Enabled = false,
+         FolderName = "San Diego Border Roleplay Script Picture_cat", -- Create a custom folder for your hub/game
+         FileName = "Big Hub"
+      },
+
+      Discord = {
+         Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+         Invite = "noinvitelink", -- The Discord invite code, do not include Discord.gg/. E.g. Discord.gg/ABCD would be ABCD
+         RememberJoins = true -- Set this to false to make them join the Discord every time they load it up
+      },
+
+      KeySystem = false, -- Set this to true to use our key system
+      KeySettings = {
+         Title = "Untitled",
+         Subtitle = "Key System",
+         Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+         FileName = "San Diego Border Roleplay Script Picture_cat K", -- It is recommended to use something unique, as other scripts using Rayfield may overwrite your key file
+         SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+         GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+         Key = {"Hello"} -- List of keys that the system will accept, can be RAW file links (pastebin, github, etc.) or simple strings ("hello", "key22")
+      }
+   })
+
+   local FarmTab = Window:CreateTab("Farm", "circle-dollar-sign")
+
+   local CivilianSection = FarmTab:CreateSection("Civilian")
+
+   local CivilianFarmToogler = FarmTab:CreateToggle({
+      Name = "Farm Enabled",
+      CurrentValue = false,
+      Flag = "CivilianFarm",
+      Callback = function(Value)
+         EnableTheCivilianFarm(Value)
+      end,
+   })
+
+   local SpeedSlider = FarmTab:CreateSlider({
+      Name = "Speed",
+      Range = {100, 250},
+      Increment = 1,
+      Suffix = "Speed",
+      CurrentValue = FarmSettings.Civilian.Speed,
+      Flag = "SpeedFarmCivilian",
+      Callback = function(Value)
+         FarmSettings.Civilian.Speed = Value
+      end,
+   })
+
+   local QuanitySmuggledItemsSlider = FarmTab:CreateSlider({
+      Name = "Quanity Of Smuggled Items",
+      Range = if El_Capo then {1, 8} else {1,5},
+      Increment = 1,
+      Suffix = "Smuggled Items",
+      CurrentValue = FarmSettings.Civilian.Quanity,
+      Flag = "QuanitySmuggledItems",
+      Callback = function(Value)
+         FarmSettings.Civilian.Quanity = Value
+      end,
+   })
+
+   local SmuggledItemsDropdown = FarmTab:CreateDropdown({
+      Name = "Sell",
+      Options = if El_Capo then {"Avacados", "Wagyu Beef", "Witches Brew", "Fake Designer Sneakers", "Fake Diamond Ring", "Mona Liza", "El Diablo"} else {"Avacados", "Wagyu Beef", "Witches Brew", "Fake Designer Sneakers", "Fake Diamond Ring", "Mona Liza"},
+      CurrentOption = {FarmSettings.Civilian.Items},
+      MultipleOptions = false,
+      Flag = "SmuggledItems",
+      Callback = function(Options)
+         FarmSettings.Civilian.Items = Options[1]
+      end,
+   })
+
+   Rayfield:SetVisibility(true)
+end
+
+initUI()
 
 -- local plr = game.Players.LocalPlayer
 -- local Camera = workspace.CurrentCamera
