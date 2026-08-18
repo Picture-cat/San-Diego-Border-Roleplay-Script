@@ -19,7 +19,7 @@ local Window = Rayfield:CreateWindow({
    -- ScriptID = "sid_xxxxxxxxxxxx", -- Your Script ID from developer.sirius.menu — enables analytics, managed keys, and script hosting
 
    ConfigurationSaving = {
-      Enabled = true,
+      Enabled = false,
       FolderName = "San Diego Border Roleplay Script Picture_cat", -- Create a custom folder for your hub/game
       FileName = "Big Hub"
    },
