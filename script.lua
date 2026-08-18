@@ -259,8 +259,6 @@ function EnableTheCivilianFarm(Value)
             GoToPosition(FarmSettings.Civilian.Positions.EntryLaundry)
             GoToPosition(FarmSettings.Civilian.Positions.LaundryProx)
 
-            local currentMoney = GetMoneyValue()
-
             if not FarmSettings.Civilian.ProximityPrompts.LaunderCash then
                local nearestProx
                local nearestDistance = math.huge
@@ -277,9 +275,11 @@ function EnableTheCivilianFarm(Value)
                FarmSettings.Civilian.ProximityPrompts.LaunderCash = nearestProx
             end
 
+            local currentMoney = GetMoneyValue()
+
             while true do
                TriggerTheProximityPrompt(FarmSettings.Civilian.ProximityPrompts.LaunderCash)
-               if currentMoney < getMoneyValue() then
+               if currentMoney < GetMoneyValue() then
                   break
                end
             end
