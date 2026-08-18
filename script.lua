@@ -148,7 +148,7 @@ function TriggerTheProximityPrompt(ProximityPrompt)
    camera.CameraType = Enum.CameraType.Custom
 
    ProximityPrompt.RequiresLineOfSight = CurrentLineOfSight
-   ProximityPrompt.MaxActivationDistance = CurrentLineOfSight
+   ProximityPrompt.MaxActivationDistance = MaxActivationDistance
 end
 
 function CountTheQuanityOfItems(ItemName)
@@ -236,7 +236,7 @@ function EnableTheCivilianFarm(Value)
 
             GoToPosition(FarmSettings.Civilian.Positions.SellPlace)
             while true do
-               TriggerTheProximityPrompt(FarmSettings.ProximityPrompts.SellPlace)
+               TriggerTheProximityPrompt(FarmSettings.Civilian.ProximityPrompts.SellPlace)
                if CountTheQuanityOfItems("Briefcase") == 1 then
                   break
                end
@@ -261,7 +261,7 @@ function EnableTheCivilianFarm(Value)
 
             local currentMoney = getMoneyValue()
 
-            if not FarmSettings.ProximityPrompts.LaunderCash then
+            if not FarmSettings.Civilian.ProximityPrompts.LaunderCash then
                local nearestProx
                local nearestDistance = math.huge
 
@@ -274,17 +274,17 @@ function EnableTheCivilianFarm(Value)
                   end
                end
 
-               FarmSettings.ProximityPrompts.LaunderCash = nearestProx
+               FarmSettings.Civilian.ProximityPrompts.LaunderCash = nearestProx
             end
 
             while true do
-               TriggerTheProximityPrompt(FarmSettings.ProximityPrompts.LaunderCash)
+               TriggerTheProximityPrompt(FarmSettings.Civilian.ProximityPrompts.LaunderCash)
                if currentMoney < getMoneyValue() then
                   break
                end
             end
 
-            GoToPosition(FarmSettings.Positions.EntryLaundry)
+            GoToPosition(FarmSettings.Civilian.Positions.EntryLaundry)
          end
       end)
    else
