@@ -89,7 +89,7 @@ function EnableTheCivilianFarm(Value)
    if Value then
       ThreadFarm = task.spawn(function()
          while true do
-
+            
          end
       end)
    else
