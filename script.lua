@@ -140,7 +140,7 @@ function TriggerTheProximityPrompt(ProximityPrompt, PositionProx)
       
    while not successTrigger do
       fireproximityprompt(ProximityPrompt)
-      task.wait(0.1)
+      task.wait(0.5)
       if (rootPart.Position - PositionProx).Magnitude >= 50 then
          GoToPosition(PositionProx)
       end
