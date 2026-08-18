@@ -4,7 +4,6 @@ local UserInputService = game:GetService("UserInputService")
 local MarketplaceService = game:GetService("MarketplaceService")
 
 getgenv().RAYFIELD_ASSET_ID = 114586840982735
-getgenv().RAYFIELD_SECURE = true
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
