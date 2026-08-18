@@ -27,7 +27,17 @@ local FarmSettings = {
          StartOfRoad = Vector3.new(6888.51806640625, 17.218589782714844, 142.9679718017578),
          EndOfRoad = Vector3.new(2935.46044921875, 17.218589782714844, 142.9679718017578),
          StartOfExit = Vector3.new(2866.91943359375, 17.218591690063477, 158.72694396972656),
-         EndOFRoadToAmerica = Vector3.new(),
+         EndOFRoadToAmerica = Vector3.new(60.19624328613281, 17.21858787536621, 140.22903442382812),
+         ParkingGarageRight = Vector3.new(59.15970230102539, 17.218589782714844, 367.4576110839844),
+         ParkingGarageTopRight = Vector3.new(-132.26979064941406, 17.181711196899414, 366.3923034667969),
+         EntryParkingGarage = Vector3.new(-128.69837951660156, 17.181711196899414, 513.7661743164062),
+         CenterFirstFloorParkingGarage = Vector3.new(-22.171096801757812, 17.21856117248535, 515.5447998046875),
+         EntryFirstFloorParkingGarage = Vector3.new(54.17606735229492, 17.21856117248535, 418.3770446777344),
+         SecondFloorParkingGarage = Vector3.new(56.145328521728516, 33.26091003417969, 568.1001586914062),
+         CenterSecondFloorParkingGarage = Vector3.new(-22.949962615966797, 33.25065231323242, 493.00726318359375),
+         EntrySecondFloorParkingGarage = Vector3.new(52.89704895019531, 33.25225067138672, 418.9273681640625),
+         ThirdFloorParkingGarage = Vector3.new(54.43683624267578, 49.2608757019043, 567.277587890625),
+         SellPlace = Vector3.new(-82.2566909790039, 49.247047424316406, 433.8547668457031),
          EntryLaundry = Vector3.new(6835.8427734375, 17.416330337524414, -42.792808532714844),
          LaundryProx = Vector3.new(6807.75146484375, 17.442039489746094, -34.21133041381836),
          ["Crate Of Avacados"] = Vector3.new(6820.89990234375, 17.416330337524414, 33.121734619140625),
@@ -54,7 +64,9 @@ local FarmSettings = {
          ["Fake Designer Sneakers"] = workspace.WorldBuyableItems.CivilianArea["Fake Designer Sneakers"].Handle.PromptAttachment.ProximityPrompt,
          ["Fake Diamond Ring"] = workspace.WorldBuyableItems.CivilianArea["Fake Diamond Ring"].Handle.PromptAttachment.ProximityPrompt,
          ["Mona Lisa Painting"] = workspace.WorldBuyableItems.CivilianArea["Mona Lisa Painting"].MonaLisaPaint.PromptAttachment.ProximityPrompt,
-         ["El Diablo Box"] = workspace.WorldBuyableItems.ElCapo["El Diablo Box"].Mesh.PromptAttachment.ProximityPrompt
+         ["El Diablo Box"] = workspace.WorldBuyableItems.ElCapo["El Diablo Box"].Mesh.PromptAttachment.ProximityPrompt,
+         SellPlace = workspace.NPC.Seller2.HumanoidRootPart.SellSmuggledGoodsPrompt,
+         LaunderCash = nil
       }
    },
    UI = {
@@ -208,6 +220,71 @@ function EnableTheCivilianFarm(Value)
             end
 
             GoToPosition(FarmSettings.Civilian.Positions.Spawn)
+            GoToPosition(FarmSettings.Civilian.Positions.StartOfRoad)
+            GoToPosition(FarmSettings.Civilian.Positions.EndOfRoad)
+            GoToPosition(FarmSettings.Civilian.Positions.StartOfExit)
+            GoToPosition(FarmSettings.Civilian.Positions.EndOFRoadToAmerica)
+            GoToPosition(FarmSettings.Civilian.Positions.ParkingGarageRight)
+            GoToPosition(FarmSettings.Civilian.Positions.ParkingGarageTopRight)
+            GoToPosition(FarmSettings.Civilian.Positions.EntryParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.CenterFirstFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.EntryFirstFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.SecondFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.CenterSecondFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.EntrySecondFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.ThirdFloorParkingGarage)
+
+            GoToPosition(FarmSettings.Civilian.Positions.SellPlace)
+            while true do
+               TriggerTheProximityPrompt(FarmSettings.ProximityPrompts.SellPlace)
+               if CountTheQuanityOfItems("Briefcase") == 1 then
+                  break
+               end
+            end
+
+            GoToPosition(FarmSettings.Civilian.Positions.ThirdFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.EntrySecondFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.CenterSecondFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.SecondFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.EntryFirstFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.CenterFirstFloorParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.EntryParkingGarage)
+            GoToPosition(FarmSettings.Civilian.Positions.ParkingGarageTopRight)
+            GoToPosition(FarmSettings.Civilian.Positions.ParkingGarageRight)
+            GoToPosition(FarmSettings.Civilian.Positions.EndOFRoadToAmerica)
+            GoToPosition(FarmSettings.Civilian.Positions.StartOfExit)
+            GoToPosition(FarmSettings.Civilian.Positions.EndOfRoad)
+            GoToPosition(FarmSettings.Civilian.Positions.StartOfRoad)
+            GoToPosition(FarmSettings.Civilian.Positions.Spawn)
+            GoToPosition(FarmSettings.Civilian.Positions.EntryLaundry)
+            GoToPosition(FarmSettings.Civilian.Positions.LaundryProx)
+
+            local currentMoney = getMoneyValue()
+
+            if not FarmSettings.ProximityPrompts.LaunderCash then
+               local nearestProx
+               local nearestDistance = math.huge
+
+               for _, prox in workspace.LaunderPrompts:GetChildren() do
+                  local part = prox.PromptPart
+
+                  if (part.Position - rootPart.Position).Magnitude < nearestDistance then
+                     nearestProx = part.LaunderBriefcasePrompt
+                     nearestDistance = (part.Position - rootPart.Position).Magnitude
+                  end
+               end
+
+               FarmSettings.ProximityPrompts.LaunderCash = nearestProx
+            end
+
+            while true do
+               TriggerTheProximityPrompt(FarmSettings.ProximityPrompts.LaunderCash)
+               if currentMoney < getMoneyValue() then
+                  break
+               end
+            end
+
+            GoToPosition(FarmSettings.Positions.EntryLaundry)
          end
       end)
    else
