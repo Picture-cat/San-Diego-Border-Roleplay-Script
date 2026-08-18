@@ -50,7 +50,7 @@ local FarmSettings = {
          ["Witches Brew"] = workspace.WorldBuyableItems.CivilianArea["Witches Brew"].Handle.PromptAttachment.ProximityPrompt,
          ["Fake Designer Sneakers"] = workspace.WorldBuyableItems.CivilianArea["Fake Designer Sneakers"].Handle.PromptAttachment.ProximityPrompt,
          ["Fake Diamond Ring"] = workspace.WorldBuyableItems.CivilianArea["Fake Diamond Ring"].Handle.PromptAttachment.ProximityPrompt,
-         ["Mona Liza Painting"] = workspace.WorldBuyableItems.CivilianArea["Mona Liza Painting"].Handle.PromptAttachment.ProximityPrompt),
+         ["Mona Liza Painting"] = workspace.WorldBuyableItems.CivilianArea["Mona Liza Painting"].Handle.PromptAttachment.ProximityPrompt,
          ["El Diablo Box"] = workspace.WorldBuyableItems.ElCapo["El Diablo Box"].Mesh.PromptAttachment.ProximityPrompt
       }
    },
