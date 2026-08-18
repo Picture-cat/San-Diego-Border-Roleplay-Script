@@ -64,7 +64,7 @@ local FarmSettings = {
          ["Fake Designer Sneakers"] = workspace.WorldBuyableItems.CivilianArea["Fake Designer Sneakers"].Handle.PromptAttachment.ProximityPrompt,
          ["Fake Diamond Ring"] = workspace.WorldBuyableItems.CivilianArea["Fake Diamond Ring"].Handle.PromptAttachment.ProximityPrompt,
          ["Mona Lisa Painting"] = workspace.WorldBuyableItems.CivilianArea["Mona Lisa Painting"].MonaLisaPaint.PromptAttachment.ProximityPrompt,
-         ["El Diablo Box"] = workspace.WorldBuyableItems.ElCapo["El Diablo Box"].Mesh.PromptAttachment.ProximityPrompt,
+         ["El Diablo Box"] = workspace.WorldBuyableItems.ElCapo["El Diablo Box"]:FindFirstChild("PromptAttachment", true).ProximityPrompt,
          SellPlace = workspace.NPC.Seller2.HumanoidRootPart.SellSmuggledGoodsPrompt,
          LaunderCash = nil
       }
@@ -115,7 +115,7 @@ function GoToPosition(targetVector3)
    end
 end
 
-function TriggerTheProximityPrompt(ProximityPrompt)
+function TriggerTheProximityPrompt(ProximityPrompt, PositionProx)
    local CurrentLineOfSight = ProximityPrompt.RequiresLineOfSight
    local CurrentDistance = ProximityPrompt.MaxActivationDistance
 
@@ -134,15 +134,15 @@ function TriggerTheProximityPrompt(ProximityPrompt)
    end)
 
    camera.CameraType = Enum.CameraType.Scriptable
-   camera.CFrame = CFrame.lookAt(camera.CFrame.Position, ProximityPrompt.Parent.Position)
+   camera.CFrame = CFrame.lookAt(camera.CFrame.Position, PositionProx)
 
    task.wait(0.1)
       
    while not successTrigger do
       fireproximityprompt(ProximityPrompt)
       task.wait(0.1)
-      if (rootPart.Position - ProximityPrompt.Parent.Position).Magnitude >= 50 then
-         GoToPosition(ProximityPrompt.Parent.Position)
+      if (rootPart.Position - PositionProx).Magnitude >= 50 then
+         GoToPosition(PositionProx)
       end
    end
 
@@ -216,7 +216,7 @@ function EnableTheCivilianFarm(Value)
             local ProximityPromptForItem = FarmSettings.Civilian.ProximityPrompts[currentSelectedItems]
 
             while true do
-               TriggerTheProximityPrompt(ProximityPromptForItem)
+               TriggerTheProximityPrompt(ProximityPromptForItem, FarmSettings.Civilian.Positions[currentSelectedItems])
                if CountTheQuanityOfItems(currentSelectedItems) == quanity then
                   break
                end
@@ -239,7 +239,7 @@ function EnableTheCivilianFarm(Value)
 
             GoToPosition(FarmSettings.Civilian.Positions.SellPlace)
             while true do
-               TriggerTheProximityPrompt(FarmSettings.Civilian.ProximityPrompts.SellPlace)
+               TriggerTheProximityPrompt(FarmSettings.Civilian.ProximityPrompts.SellPlace, FarmSettings.Civilian.Positions.SellPlace)
                if CountTheQuanityOfItems("Briefcase") == 1 then
                   break
                end
@@ -281,7 +281,7 @@ function EnableTheCivilianFarm(Value)
             local currentMoney = GetMoneyValue()
 
             while true do
-               TriggerTheProximityPrompt(FarmSettings.Civilian.ProximityPrompts.LaunderCash)
+               TriggerTheProximityPrompt(FarmSettings.Civilian.ProximityPrompts.LaunderCash, FarmSettings.Civilian.Positions.LaundryProx)
                if currentMoney < GetMoneyValue() then
                   break
                end
